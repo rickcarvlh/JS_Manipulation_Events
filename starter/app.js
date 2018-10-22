@@ -14,39 +14,57 @@ GAME RULES:
 
 // Variables
 
-var scores, roundScore, activePlayer,	dice;
+var scores, roundScore, activePlayer;
 
 scores = [0, 0];
 roundScore = 0;
 activePlayer = 1;
-
-dice = Math.floor(Math.random() * 6)	+	1;
-// console.log(dice);
-
-// select the id from the html
-// js will use the activePlayer var and check the number of it -> type coercion
-document.querySelector('#current-' + activePlayer).textContent = dice;
-
-//! Example!
-// document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + dice + '</em>';
-// same as above but for reading:
-var x = document.querySelector('#score-0').textContent;
-console.log(x);
 
 
 /**hiding the dice trought the js no css -> display:none */
 // in js all styles are inline
 document.querySelector('.dice').style.display = 'none';
 
-function btn() {
-	// do something
-}
-btn();
+// same as querySelector but faster
+//* setting everything to 0
+document.getElementById('score-0').textContent = '0';
+document.getElementById('score-1').textContent = '0';
+document.getElementById('current-0').textContent = '0';
+document.getElementById('current-1').textContent = '0';
+
+
 
 // there are a lot of event check MDN for more
-// the second parameter is callback function
-document.querySelector('.btn-roll').addEventListener('click', btn);
+document.querySelector('.btn-roll').addEventListener('click', function() {
+	// Do something here Anomymous function - can't be called anywhere else
+
+	//*1. Random Number
+	// can not be acessed from the outside
+	var dice = Math.floor(Math.random() * 6) + 1;
+
+	//*2. Display the results
+	var diceDOM = document.querySelector('.dice');
+	diceDOM.style.display = 'block';
+	diceDOM.src = 'dice-' + dice + '.png';
+
+
+	//*3. Update the round score IF the rolled number was NOT a 1
+	
+});
 
 
 
 
+// dice = Math.floor(Math.random() * 6)	+	1;
+// console.log(dice);
+
+// select the id from the html
+// js will use the activePlayer var and check the number of it -> type coercion
+// document.querySelector('#current-' + activePlayer).textContent = dice;
+
+
+//! Example!
+// document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + dice + '</em>';
+// same as above but for reading:
+// var x = document.querySelector('#score-0').textContent;
+// console.log(x);
