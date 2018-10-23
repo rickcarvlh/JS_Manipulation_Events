@@ -13,67 +13,80 @@ GAME RULES:
 //* The Pig Game
 
 // Variables
+//* gamePlaying is a state variable
 
-var scores, roundScore, activePlayer;
+var scores, roundScore, activePlayer, gamePlaying;
 
 init();
 
 
 // there are a lot of event check MDN for more
+//* creation of a random number
 document.querySelector('.btn-roll').addEventListener('click', function () {
-	// Do something here Anomymous function - can't be called anywhere else
+	// this only happens if game is playing
+	if (gamePlaying) {
 
-	//*1. Random Number
-	// can not be acessed from the outside
-	var dice = Math.floor(Math.random() * 6) + 1;
+		// Do something here Anomymous function - can't be called anywhere else
 
-	//*2. Display the results
-	var diceDOM = document.querySelector('.dice');
-	diceDOM.style.display = 'block';
-	diceDOM.src = 'dice-' + dice + '.png';
+		//*1. Random Number
+		// can not be acessed from the outside
+		var dice = Math.floor(Math.random() * 6) + 1;
+
+		//*2. Display the results
+		var diceDOM = document.querySelector('.dice');
+		diceDOM.style.display = 'block';
+		diceDOM.src = 'dice-' + dice + '.png';
 
 
-	//*3. Update the round score IF the rolled number was NOT a 1
-	if (dice !== 1) {
-		//Add Score
-		roundScore += dice; //same has roundScore = roundScore + dice;
-		// update the roundScore and display the roundScore
-		document.querySelector('#current-' + activePlayer).textContent = roundScore;
-	} else {
-		// Next player
-		// if it's 0 then activePlayer should be 1 else activePlayer should 0
-		nextPlayer();
+		//*3. Update the round score IF the rolled number was NOT a 1
+		if (dice !== 1) {
+			//Add Score
+			roundScore += dice; //same has roundScore = roundScore + dice;
+			// update the roundScore and display the roundScore
+			document.querySelector('#current-' + activePlayer).textContent = roundScore;
+		} else {
+			// Next player
+			// if it's 0 then activePlayer should be 1 else activePlayer should 0
+			nextPlayer();
+
+		}
 
 	}
+
 
 });
 
 // Event Listener
 
 document.querySelector('.btn-hold').addEventListener('click', function () {
-	//	Add CURRENT score to GLOBAL score
-	//* 	scores[activePlayer] = scores[activePlayer] + roundeScore; -> same thing
-	scores[activePlayer] += roundScore;
 
-	//	Update the UI
-	document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+	if (gamePlaying) {
+		//	Add CURRENT score to GLOBAL score
+		//* 	scores[activePlayer] = scores[activePlayer] + roundeScore; -> same thing
+		scores[activePlayer] += roundScore;
 
-	//	Check if player won the game
-	if (scores[activePlayer] >= 20) {
-		// replace player name with winner
-		document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
-		// remove active class from winner
-		document.querySelector('.dice').style.display = 'none';
-		// classList gets acess to the classes of the element
-		document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
-		document.querySelector('.player-' + activePlayer + '-panel').classList.remove('winner');
+		//	Update the UI
+		document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
-	} else {
-		// if the game continues we want the next player to play
-		//	Next 	Player 
-		nextPlayer();
+		//	Check if player won the game
+		if (scores[activePlayer] >= 20) {
+			// replace player name with winner
+			document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
+			// remove active class from winner
+			document.querySelector('.dice').style.display = 'none';
+			// classList gets acess to the classes of the element
+			document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+			document.querySelector('.player-' + activePlayer + '-panel').classList.remove('winner');
+
+			// where we detect who won the the game -> stop it
+			gamePlaying = false;
+
+		} else {
+			// if the game continues we want the next player to play
+			//	Next 	Player 
+			nextPlayer();
+		}
 	}
-
 
 });
 
@@ -112,6 +125,7 @@ function init() {
 	roundScore = 0;
 	// the default player is 0
 	activePlayer = 0;
+	gamePlaying = true;
 
 	/**hiding the dice trought the js no css -> display:none */
 	// in js all styles are inline
