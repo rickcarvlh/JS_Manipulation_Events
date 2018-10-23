@@ -18,7 +18,8 @@ var scores, roundScore, activePlayer;
 
 scores = [0, 0];
 roundScore = 0;
-activePlayer = 1;
+// the default player is 0
+activePlayer = 0;
 
 
 /**hiding the dice trought the js no css -> display:none */
@@ -49,6 +50,31 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 
 
 	//*3. Update the round score IF the rolled number was NOT a 1
+	if(dice !== 1){
+		//Add Score
+		roundScore += dice;	//same has roundScore = roundScore + dice;
+		// update the roundScore and display the roundScore
+		document.querySelector('#current-' + activePlayer).textContent = roundScore;
+	}else {
+		// Next player
+		// if it's 0 then activePlayer should be 1 else activePlayer should 0
+		activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
+
+		//so the score doesn't add up when switching players 
+		roundScore = 0;
+
+		document.getElementById('current-0').textContent = '0';
+		document.getElementById('current-1').textContent = '0';
+
+		// this way it just toggles the classes . Changes between them
+		document.querySelector('.player-0-panel').classList.toggle('active');
+		document.querySelector('.player-1-panel').classList.toggle('active');
+
+		// when a player rolls a one hide the dice again
+		document.querySelector('.dice').style.display = 'none';
+		
+
+	}
 	
 });
 
@@ -68,3 +94,8 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 // same as above but for reading:
 // var x = document.querySelector('#score-0').textContent;
 // console.log(x);
+
+//!Reference for other stuff
+// move the active class to another place -> player-0-panel(html class)
+// document.querySelector('.player-0-panel').classList.remove('active');
+// document.querySelector('.player-1-panel').classList.add('active');
