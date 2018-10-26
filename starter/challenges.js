@@ -1,15 +1,3 @@
-/*
-GAME RULES:
-
-- The game has 2 players, playing in rounds
-- In each turn, a player rolls a dice as many times as he whishes. Each result get added to his ROUND score
-- BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
-- The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
-- The first player to reach 100 points on GLOBAL score wins the game
-
-*/
-
-
 //* The Pig Game
 
 // Variables
@@ -18,6 +6,9 @@ GAME RULES:
 var scores, roundScore, activePlayer, gamePlaying;
 
 init();
+
+// declared here because if not the value would be lost in the function
+var lastDice;
 
 
 // there are a lot of event check MDN for more
@@ -30,16 +21,49 @@ document.querySelector('.btn-roll').addEventListener('click', function () {
 
 		//*1. Random Number
 		// can not be acessed from the outside
-		var dice = Math.floor(Math.random() * 6) + 1;
+		// we generate a dice number
+		var dice1 = Math.floor(Math.random() * 6) + 1;
+		var dice2 = Math.floor(Math.random() * 6) + 1;
 
 		//*2. Display the results
-		var diceDOM = document.querySelector('.dice');
-		diceDOM.style.display = 'block';
-		diceDOM.src = 'dice-' + dice + '.png';
+		// * don't want this anymore
+		// var diceDOM = document.querySelector('.dice');
+		document.getElementById('dice-1').style.display = 'block';
+		document.getElementById('dice-2').style.display = 'block';
+		// diceDOM.style.display = 'block';
+		document.getElementById('dice-1').src = 'dice-' + dice1 + '.png';
+		document.getElementById('dice-1').src = 'dice-' + dice2 + '.png';
 
 
+		
 		//*3. Update the round score IF the rolled number was NOT a 1
-		if (dice !== 1) {
+		if (dice1 !== 1 && dice2 !== 1) {
+			//Add Score
+			roundScore += dice1 + dice2; //same has roundScore = roundScore + dice1  + dice2;
+			// update the roundScore and display the roundScore
+			document.querySelector('#current-' + activePlayer).textContent = roundScore;
+		} else {
+			// Next player
+			// if it's 0 then activePlayer should be 1 else activePlayer should 0
+			nextPlayer();
+
+		}
+
+		/*
+		if (dice === 6 && lastDice === 6) {
+			// Player looses score
+			scores[activePlayer] = 0;
+			//	Update the UI
+			document.querySelector('#score-' + activePlayer).textContent = '0';
+			// switch player
+			nextPlayer();
+		}
+		// the dice number is checked
+		else if (dice !== 1) {
+			//! i believe this is correct it's hard to debug
+			if (dice === lastDice) {
+				lastDice = 0;
+			}
 			//Add Score
 			roundScore += dice; //same has roundScore = roundScore + dice;
 			// update the roundScore and display the roundScore
@@ -51,6 +75,9 @@ document.querySelector('.btn-roll').addEventListener('click', function () {
 
 		}
 
+		// we give the lastDice var the same as the last dice rolled.
+		lastDice = dice;
+		*/
 	}
 
 
@@ -68,12 +95,28 @@ document.querySelector('.btn-hold').addEventListener('click', function () {
 		//	Update the UI
 		document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
+		var input = document.querySelector('.final-score').value;
+		var winningScore;
+		// console.log(input);
+
+		// undefiened , 0, null, or "" are COERCED to false
+		// Anything else is COERCED to true
+		if (input) {
+			// store the value of input in the var
+			winningScore = input;
+		} else {
+			winningScore = 100
+		}
+
+
 		//	Check if player won the game
-		if (scores[activePlayer] >= 20) {
+		if (scores[activePlayer] >= winningScore) {
 			// replace player name with winner
 			document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
 			// remove active class from winner
-			document.querySelector('.dice').style.display = 'none';
+			// document.querySelector('.dice').style.display = 'none';
+			document.getElementById('dice-1').style.display = 'none';
+			document.getElementById('dice-2').style.display = 'none';
 			// classList gets acess to the classes of the element
 			document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
 			document.querySelector('.player-' + activePlayer + '-panel').classList.remove('winner');
@@ -107,7 +150,10 @@ function nextPlayer() {
 	document.querySelector('.player-1-panel').classList.toggle('active');
 
 	// when a player rolls a one hide the dice again
-	document.querySelector('.dice').style.display = 'none';
+	// document.querySelector('.dice').style.display = 'none';
+	document.getElementById('dice-1').style.display = 'none';
+	document.getElementById('dice-2').style.display = 'none';
+
 }
 
 // listen to an event->EventListener
@@ -129,7 +175,9 @@ function init() {
 
 	/**hiding the dice trought the js no css -> display:none */
 	// in js all styles are inline
-	document.querySelector('.dice').style.display = 'none';
+	// document.querySelector('.dice').style.display = 'none';
+	document.getElementById('dice-1').style.display = 'none';
+	document.getElementById('dice-2').style.display = 'none';
 
 	// same as querySelector but faster
 	//* setting everything to 0
